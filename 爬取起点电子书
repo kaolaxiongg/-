@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import time
-# from ip import *
 import json
 
 def baocun(url):
@@ -23,22 +21,11 @@ def baocun(url):
         print(new1)
     except:
         print('---------------出现问题，已经跳过------------------')
-def huoqu_url(name):
-    headers = {
-        'Cookie':'_csrfToken=OfxKSh9MKSC2jMD1Lumljl0L1wchGt4PUCyL0VNw; newstatisticUUID=1538124016_616761102; qdrs=0%7C3%7C0%7C0%7C1; qdgd=1; pgv_pvi=1959199744; e1=%7B%22pid%22%3A%22qd_P_all%22%2C%22eid%22%3A%22qd_B58%22%2C%22l1%22%3A5%7D; e2=%7B%22pid%22%3A%22qd_P_xuanhuan%22%2C%22eid%22%3A%22qd_F122%22%2C%22l1%22%3A3%7D; rcr=3681560%2C1010926054; bc=3681560; lrbc=3681560%7C353679499%7C1%2C1010926054%7C424619457%7C0',
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36 Core/1.63.5702.400 QQBrowser/10.2.1893.400',
-        'Host':'book.qidian.com',
-        'Referer': 'https://book.qidian.com/info/{}'.format(name),
-        'X-Requested-With': 'XMLHttpRequest'
-    }
-    data = {
-        '_csrfToken': 'OfxKSh9MKSC2jMD1Lumljl0L1wchGt4PUCyL0VNw',
-        'bookId': '{}'.format(name)
-    }
+def huoqu_url(name):    
     url1 = 'https://book.qidian.com/ajax/book/category?_csrfToken=3fd17w7DkeOo4Yi0PYZnwIEPObFw6mlLfthGjWJg&bookId={}'.format(name)
-    r = requests.get(url1)#, headers=headers, data=data)
+    r = requests.get(url1)
     req = r.json()
-    # print(req)
+
 
     vs_pn1 = req['data']['vs'][1]['cCnt']
     try:
@@ -53,9 +40,7 @@ def huoqu_url(name):
     except:
         pass
     print(vs_pn1)
-    # for a in range(vs_pn):
-    #     vs_pn = req['data']['vs'][0][a]['cU']
-    #     baocun(vs_pn)
+
     for b in range(vs_pn1):
         vs_pn1 = req['data']['vs'][1]['cs'][b]['cU']
         baocun(vs_pn1)
