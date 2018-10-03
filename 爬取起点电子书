@@ -1,0 +1,87 @@
+import requests
+from bs4 import BeautifulSoup
+import re
+import time
+# from ip import *
+import json
+
+def baocun(url):
+    html = requests.get('https://read.qidian.com/chapter/'+url)#proxies链接代理池
+    ##获取网页代码
+    try:
+        soup = BeautifulSoup(html.text, "lxml")#解析器html.parser
+        fff = soup.find_all(class_="read-content j_readContent")
+        f_1 = soup.find(class_="text-head")
+        ne = re.sub('<p>|</p>|<br/>|</div>|\xa0|<div id="content">|<div class="read-content j_readContent">|\u2022',"\n", str(fff))
+        new = re.sub('\n+','\n',ne)
+        new1 = re.sub('\n','',str(f_1.text))
+        new1 = re.sub(r'\ue60c|\ue650|\ue64f|\ue653|\u2022|点击书签后，可收藏每个章节的书签，“阅读进度”可以在个人中心书架里查看', "", new1)
+
+        fo = open('1003365703.txt', "a")
+        fo.write(new1+new)
+        fo.close()
+        print(new1)
+    except:
+        print('---------------出现问题，已经跳过------------------')
+def huoqu_url(name):
+    headers = {
+        'Cookie':'_csrfToken=OfxKSh9MKSC2jMD1Lumljl0L1wchGt4PUCyL0VNw; newstatisticUUID=1538124016_616761102; qdrs=0%7C3%7C0%7C0%7C1; qdgd=1; pgv_pvi=1959199744; e1=%7B%22pid%22%3A%22qd_P_all%22%2C%22eid%22%3A%22qd_B58%22%2C%22l1%22%3A5%7D; e2=%7B%22pid%22%3A%22qd_P_xuanhuan%22%2C%22eid%22%3A%22qd_F122%22%2C%22l1%22%3A3%7D; rcr=3681560%2C1010926054; bc=3681560; lrbc=3681560%7C353679499%7C1%2C1010926054%7C424619457%7C0',
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Safari/537.36 Core/1.63.5702.400 QQBrowser/10.2.1893.400',
+        'Host':'book.qidian.com',
+        'Referer': 'https://book.qidian.com/info/{}'.format(name),
+        'X-Requested-With': 'XMLHttpRequest'
+    }
+    data = {
+        '_csrfToken': 'OfxKSh9MKSC2jMD1Lumljl0L1wchGt4PUCyL0VNw',
+        'bookId': '{}'.format(name)
+    }
+    url1 = 'https://book.qidian.com/ajax/book/category?_csrfToken=3fd17w7DkeOo4Yi0PYZnwIEPObFw6mlLfthGjWJg&bookId={}'.format(name)
+    r = requests.get(url1)#, headers=headers, data=data)
+    req = r.json()
+    # print(req)
+
+    vs_pn1 = req['data']['vs'][1]['cCnt']
+    try:
+        vs_pn2 = req['data']['vs'][2]['cCnt']
+        vs_pn3 = req['data']['vs'][3]['cCnt']
+        vs_pn4 = req['data']['vs'][4]['cCnt']
+        vs_pn5 = req['data']['vs'][5]['cCnt']
+        vs_pn6 = req['data']['vs'][6]['cCnt']
+        vs_pn7 = req['data']['vs'][7]['cCnt']
+        vs_pn8 = req['data']['vs'][8]['cCnt']
+        print(vs_pn2, vs_pn3, vs_pn4, vs_pn5, vs_pn6, vs_pn7, vs_pn8)
+    except:
+        pass
+    print(vs_pn1)
+    # for a in range(vs_pn):
+    #     vs_pn = req['data']['vs'][0][a]['cU']
+    #     baocun(vs_pn)
+    for b in range(vs_pn1):
+        vs_pn1 = req['data']['vs'][1]['cs'][b]['cU']
+        baocun(vs_pn1)
+    try:
+        for c in range(vs_pn2):
+            vs_pn2 = req['data']['vs'][2]['cs'][c]['cU']
+            baocun(vs_pn2)
+        for d in range(vs_pn3):
+            vs_pn3 = req['data']['vs'][3]['cs'][d]['cU']
+            baocun(vs_pn3)
+        for e in range(vs_pn4):
+            vs_pn4 = req['data']['vs'][4]['cs'][e]['cU']
+            baocun(vs_pn4)
+        for f in range(vs_pn5):
+           vs_pn5 = req['data']['vs'][5]['cs'][f]['cU']
+           baocun(vs_pn5)
+        for g in range(vs_pn6):
+            vs_pn6 = req['data']['vs'][6]['cs'][g]['cU']
+            baocun(vs_pn6)
+        for h in range(vs_pn7):
+            vs_pn7 = req['data']['vs'][7]['cs'][h]['cU']
+            baocun(vs_pn7)
+    except:
+        pass
+
+
+huoqu_url('1003365703')
+
+
